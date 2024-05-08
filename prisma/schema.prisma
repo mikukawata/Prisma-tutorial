@@ -14,17 +14,24 @@ datasource db {
 }
 
 model User {
-  id             String @id @default(uuid())
-  age            Int
-  name           String
-  email          String @unique
-  role           Role   @default(BASIC)
-  preferences    Json
-  writtenPosts   Post[] @relation("WrittenPosts")
-  favoritedPosts Post[] @relation("FavoritedPosts")
+  id               String          @id @default(uuid())
+  age              Int
+  name             String
+  email            String          @unique
+  role             Role            @default(BASIC)
+  writtenPosts     Post[]          @relation("WrittenPosts")
+  favoritedPosts   Post[]          @relation("FavoritedPosts")
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique
 
   @@unique([age, name])
   @@index([email])
+}
+
+model UserPreference {
+  id          String  @id @default(uuid())
+  emailUpdate Boolean
+  user        User?
 }
 
 model Post {
